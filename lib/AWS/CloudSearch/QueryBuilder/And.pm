@@ -6,24 +6,32 @@ use utf8;
 
 use parent 'AWS::CloudSearch::QueryBuilder::Expression';
 
+use Carp qw/croak/;
+use Scalar::Util qw/blessed/;
+
 # (and boost=N EXPRESSION EXPRESSION … EXPRESSIONn)
 
 sub new {
-    my ($class, %args) = @_;
+    my ($class, @args) = @_;
 
-    return bless \%args, $class;
+    my $opt = {};
+    if (ref($args[-1]) eq 'HASH') {
+        $opt = pop @args;
+    }
+
+    if (grep { !blessed($_) || !$_->isa('AWS::CloudSearch::QueryBuilder::Expression') } @args) {
+        croak("[$class] args allows expression only");
+    }
+
+    return bless {
+        opt => $opt,
+        expressions => \@args,
+    }, $class;
 }
 
-sub to_string {
+sub to_val_string {
     my $self = shift;
-
-    my @fields = ('and');
-    if (defined $args->{boost}) {
-        push @fields, 'boost=' . $args->{boost};
-    }
-    push @fields, $_->to_string for @{ $self->{expressions} };
-
-    return q[(] . join(' ', @fields) . q[)];
+    return join ' ', map { $_->to_string } @{ $self->{expressions} };
 }
 
 1;

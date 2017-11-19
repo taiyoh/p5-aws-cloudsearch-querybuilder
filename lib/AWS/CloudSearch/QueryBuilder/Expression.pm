@@ -57,7 +57,8 @@ sub to_string {
 
     my ($pkg) = reverse split '::', ref($self);
     my $op = lc $pkg;
-    my @fields = ($op, 'field=' . $self->{field});
+    my @fields = ($op);
+    push @fields, 'field=' . $self->{field} if $self->{field};
     push @fields, @{ $self->to_opt_string };
     push @fields, $self->to_val_string;
 
