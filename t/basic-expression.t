@@ -82,6 +82,11 @@ subtest 'unexpected cases' => sub {
             message => 'require field key',
         },
         {
+            cls => 'Term',
+            args => { field => { foo => 'bar' }, boost => 'a' },
+            message => 'invalid boost: a',
+        },
+        {
             cls => 'Range',
             args => { field => { hoge => { '>' => 'a', '<=', 100 } } },
             message => 'range value allows only number',
