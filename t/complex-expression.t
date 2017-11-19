@@ -17,6 +17,12 @@ my $t1 = AWS::CloudSearch::QueryBuilder::Term->new(
 my $t2 = AWS::CloudSearch::QueryBuilder::Term->new(
     field => { hoge => 'fuga' }
 );
+my $t3 = AWS::CloudSearch::QueryBuilder::Term->new(
+    field => { foo => 'baz' }
+);
+my $t4 = AWS::CloudSearch::QueryBuilder::Term->new(
+    field => { hoge => 'piyo' }
+);
 
 {
     package T::Foo;
@@ -35,6 +41,15 @@ subtest 'normal case' => sub {
             cls => 'Or',
             args => [$t1, $t2, { boost => 2 }],
             expected => q[(or boost=2 (term field=foo 'bar') (term field=hoge 'fuga'))],
+        },
+        {
+            cls => 'Or',
+            args => [
+                AWS::CloudSearch::QueryBuilder::And->new($t1, $t2),
+                AWS::CloudSearch::QueryBuilder::And->new($t3, $t4),
+                { boost => 10 }
+            ],
+            expected => q[(or boost=10 (and (term field=foo 'bar') (term field=hoge 'fuga')) (and (term field=foo 'baz') (term field=hoge 'piyo')))],
         },
         {
             cls => 'Not',
