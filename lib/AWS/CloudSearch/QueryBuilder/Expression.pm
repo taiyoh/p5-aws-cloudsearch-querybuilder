@@ -23,8 +23,9 @@ sub new {
         $opt->{$key} = floor($v);
     }
 
-    if (scalar(keys %args) > 1) {
-        croak("[$class] args has ovesize keys");
+    my $key_length = scalar keys %args;
+    if ($key_length != 1) {
+        croak("[$class] you can select field only one");
     }
 
     my ($field, $val) = each %args;

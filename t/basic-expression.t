@@ -69,4 +69,28 @@ subtest 'normal cases' => sub {
     }
 };
 
+subtest 'unexpected cases' => sub {
+    my @tests = (
+        {
+            cls => 'Term',
+            args => { foo => 'bar', distance => 5 },
+            message => 'you can select field only one',
+        },
+        {
+            cls => 'Term',
+            args => { },
+            message => 'you can select field only one',
+        },
+
+    );
+    for my $test (@tests) {
+        my $pkg = "AWS::CloudSearch::QueryBuilder::" . $test->{cls};
+        local $@;
+        eval { $pkg->new(%{ $test->{args} }) };
+        ok $@;
+        my $err = $test->{message};
+        like $@, qr/^\[$pkg\] $err/;
+    }
+};
+
 done_testing;
