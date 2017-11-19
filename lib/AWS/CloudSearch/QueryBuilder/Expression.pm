@@ -23,12 +23,10 @@ sub new {
         $opt->{$key} = floor($v);
     }
 
-    my $key_length = scalar keys %args;
-    if ($key_length != 1) {
-        croak("[$class] you can select field only one");
+    if (!exists $args{field}) {
+        croak("[$class] require field key");
     }
-
-    my ($field, $val) = each %args;
+    my ($field, $val) = each %{ $args{field} };
 
     bless {
         opt   => $opt,

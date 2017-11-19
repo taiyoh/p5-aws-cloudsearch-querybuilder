@@ -16,47 +16,47 @@ subtest 'normal cases' => sub {
     my @tests = (
         {
             cls      => 'Near',
-            args     => { foo => 'bar' },
+            args     => { field => { foo => 'bar' } },
             expected => q[(near field=foo 'bar')],
         },
         {
             cls      => 'Near',
-            args     => { foo => 'bar', boost => 2, distance => 5 },
+            args     => { field => { foo => 'bar' }, boost => 2, distance => 5 },
             expected => q[(near field=foo distance=5 boost=2 'bar')],
         },
         {
             cls      => 'Phrase',
-            args     => { foo => 'bar' },
+            args     => { field => { foo => 'bar' } },
             expected => q[(phrase field=foo 'bar')],
         },
         {
             cls      => 'Prefix',
-            args     => { foo => 'bar', boost => 2 },
+            args     => { field => { foo => 'bar' }, boost => 2 },
             expected => q[(prefix field=foo boost=2 'bar')],
         },
         {
             cls      => 'Term',
-            args     => { foo => 'bar' },
+            args     => { field => { foo => 'bar' } },
             expected => q[(term field=foo 'bar')],
         },
         {
             cls      => 'Term',
-            args     => { foo => q['bar' and <\> 'baz'] },
+            args     => { field => { foo => q['bar' and <\> 'baz'] } },
             expected => q[(term field=foo '\'bar\' and <\> \'baz\'')],
         },
         {
             cls      => 'Range',
-            args     => { foo => { '>' => 10 } },
+            args     => { field => { foo => { '>' => 10 } } },
             expected => q/(range field=foo {10,})/,
         },
         {
             cls      => 'Range',
-            args     => { foo => { '>=' => 10, '<' => 15 } },
+            args     => { field => { foo => { '>=' => 10, '<' => 15 } } },
             expected => q/(range field=foo [10,15})/,
         },
         {
             cls      => 'Range',
-            args     => { foo => { '<=' => 100 } },
+            args     => { field => { foo => { '<=' => 100 } } },
             expected => q/(range field=foo {,100])/,
         },
     );
@@ -74,21 +74,21 @@ subtest 'unexpected cases' => sub {
         {
             cls => 'Term',
             args => { foo => 'bar', distance => 5 },
-            message => 'you can select field only one',
+            message => 'require field key',
         },
         {
             cls => 'Term',
             args => { },
-            message => 'you can select field only one',
+            message => 'require field key',
         },
         {
             cls => 'Range',
-            args => { hoge => { '>' => 'a', '<=', 100 } },
+            args => { field => { hoge => { '>' => 'a', '<=', 100 } } },
             message => 'range value allows only number',
         },
         {
             cls => 'Range',
-            args => { hoge => { fuga => 'piyo' } },
+            args => { field => { hoge => { fuga => 'piyo' } } },
             message => 'you must fill range value',
         },
     );
