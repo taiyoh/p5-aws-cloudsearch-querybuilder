@@ -36,7 +36,10 @@ sub new {
     }, $class;
 }
 
-sub to_val_string { return q['] . $_[0]->{value} . q['] }
+sub to_val_string {
+    (my $ret = $_[0]->{value}) =~ s{'}{\\'}g;
+    return q['] . $ret . q['];
+}
 
 sub to_opt_string {
     my $self = shift;

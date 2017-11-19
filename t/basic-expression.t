@@ -40,6 +40,11 @@ subtest 'normal cases' => sub {
             expected => q[(term field=foo 'bar')],
         },
         {
+            cls      => 'Term',
+            args     => { foo => q['bar' and <\> 'baz'] },
+            expected => q[(term field=foo '\'bar\' and <\> \'baz\'')],
+        },
+        {
             cls      => 'Range',
             args     => { foo => { '>' => 10 } },
             expected => q/(range field=foo {10,})/,
