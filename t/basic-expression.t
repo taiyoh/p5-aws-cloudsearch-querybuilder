@@ -81,13 +81,21 @@ subtest 'unexpected cases' => sub {
             args => { },
             message => 'you can select field only one',
         },
-
+        {
+            cls => 'Range',
+            args => { hoge => { '>' => 'a', '<=', 100 } },
+            message => 'range value allows only number',
+        },
+        {
+            cls => 'Range',
+            args => { hoge => { fuga => 'piyo' } },
+            message => 'you must fill range value',
+        },
     );
     for my $test (@tests) {
         my $pkg = "AWS::CloudSearch::QueryBuilder::" . $test->{cls};
         local $@;
         eval { $pkg->new(%{ $test->{args} }) };
-        ok $@;
         my $err = $test->{message};
         like $@, qr/^\[$pkg\] $err/;
     }

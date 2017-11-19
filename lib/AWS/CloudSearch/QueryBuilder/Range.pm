@@ -6,10 +6,15 @@ use utf8;
 
 use parent 'AWS::CloudSearch::QueryBuilder::Expression';
 
+use Carp qw/croak/;
+use Scalar::Util qw/looks_like_number/;
+
 # (range field=FIELD boost=N RANGE)
 
 sub new {
-    my $obj = shift->SUPER::new(@_);
+    my $class = shift;
+    my $obj   = $class->SUPER::new(@_);
+
     my $value = delete $obj->{value};
     my ($pre_op, $pre_val, $post_op, $post_val) = map { "" } 1 .. 4;
     if ($value->{'>='}) {
@@ -29,6 +34,16 @@ sub new {
         $post_val = $value->{'<'};
     } else {
         $post_op = '}';
+    }
+
+    if ($pre_val ne '' && !looks_like_number($pre_val)) {
+        croak("[$class] range value allows only number");
+    }
+    if ($post_val ne '' && !looks_like_number($post_val)) {
+        croak("[$class] range value allows only number");
+    }
+    if ($pre_val eq '' && $post_val eq '') {
+        croak("[$class] you must fill range value");
     }
 
     $obj->{value} = {
