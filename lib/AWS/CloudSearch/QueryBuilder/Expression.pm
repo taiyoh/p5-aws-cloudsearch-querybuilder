@@ -23,6 +23,10 @@ sub new {
         $opt->{$key} = floor($v);
     }
 
+    if (scalar(keys %args) > 1) {
+        croak("[$class] args has ovesize keys");
+    }
+
     my ($field, $val) = each %args;
 
     bless {
@@ -55,7 +59,7 @@ sub to_string {
     push @fields, @{ $self->to_opt_string };
     push @fields, $self->to_val_string;
 
-    return q[(] . join(' ', @fields), q[)];
+    return q[(] . join(' ', @fields) . q[)];
 }
 
 1;
