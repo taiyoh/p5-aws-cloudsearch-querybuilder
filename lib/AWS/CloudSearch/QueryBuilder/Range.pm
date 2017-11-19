@@ -12,17 +12,17 @@ sub to_val_string {
     my $self = shift;
 
     my ($val_pre, $val_post);
-    if ($self->{range}{'>='}) {
-        $val_pre = '[' . $self->{range}{'>='};
-    } elsif ($self->{range}{'>'}) {
-        $val_pre = '{' . $self->{range}{'>'};
+    if ($self->{value}{'>='}) {
+        $val_pre = '[' . $self->{value}{'>='};
+    } elsif ($self->{value}{'>'}) {
+        $val_pre = '{' . $self->{value}{'>'};
     } else {
         $val_pre = '{';
     }
-    if ($self->{range}{'<='}) {
-        $val_post = $self->{range}{'<='} . ']';
-    } elsif ($self->{range}{'<='}) {
-        $val_post = $self->{range}{'>'} . '}';
+    if ($self->{value}{'<='}) {
+        $val_post = $self->{value}{'<='} . ']';
+    } elsif ($self->{value}{'<'}) {
+        $val_post = $self->{value}{'<'} . '}';
     } else {
         $val_post = '}';
     }
